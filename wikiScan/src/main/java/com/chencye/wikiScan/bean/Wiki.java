@@ -4,11 +4,11 @@ public class Wiki {
     private String title;
     private String[] tags;
     
-    private long lastModified;
+    private String lastModified;
     
     private String url;
     
-    public Wiki(String url, long lastModified) {
+    public Wiki(String url, String lastModified) {
         super();
         this.url = url;
         this.lastModified = lastModified;
@@ -30,7 +30,7 @@ public class Wiki {
         this.tags = tags;
     }
     
-    public long getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
     

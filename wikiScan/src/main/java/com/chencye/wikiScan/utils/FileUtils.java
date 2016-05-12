@@ -35,6 +35,14 @@ public final class FileUtils {
         return sb.toString();
     }
     
+    public static String[] generatePaths(String path, String[] subPaths) {
+        subPaths = subPaths == null ? new String[0] : subPaths;
+        for (int i = 0, j = subPaths.length; i < j; i++) {
+            subPaths[i] = FileUtils.mergePath(path, subPaths[i]);
+        }
+        return subPaths;
+    }
+    
     public static void sortFile(List<File> files) {
         Collections.sort(files, new Comparator<File>() {
             @Override
@@ -51,8 +59,8 @@ public final class FileUtils {
         
         File rootFile = new File(path);
         if (rootFile.exists()) {
-            final String[] excludeDirPaths = generateExcludePaths(path, excludeDirs);
-            final String[] excludeFilePaths = generateExcludePaths(path, excludeFiles);
+            final String[] excludeDirPaths = generatePaths(path, excludeDirs);
+            final String[] excludeFilePaths = generatePaths(path, excludeFiles);
             Stack<File> stack = new Stack<File>();
             stack.push(rootFile);
             while (!stack.isEmpty()) {
@@ -106,11 +114,4 @@ public final class FileUtils {
         return files;
     }
     
-    private static String[] generateExcludePaths(String path, String[] excludes) {
-        excludes = excludes == null ? new String[0] : excludes;
-        for (int i = 0, j = excludes.length; i < j; i++) {
-            excludes[i] = FileUtils.mergePath(path, excludes[i]);
-        }
-        return excludes;
-    }
 }

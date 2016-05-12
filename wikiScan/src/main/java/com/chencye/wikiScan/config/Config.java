@@ -20,6 +20,9 @@ public class Config {
     private static final String REGEX_SPLIT_PROP = "=";
     private static final String PREFIX_COMMONT = "#";
     
+    private static final Map<String, String> confMap = new HashMap<String, String>();
+    
+    public static final String ENCODING_SHELL;
     public static final String COMMAN_CLEAR;
     public static final String COMMAN_COMMIT;
     
@@ -32,6 +35,10 @@ public class Config {
     public static final String[] EXCLUDE_DIRS;
     public static final String[] EXCLUDE_FILES;
     
+    public static final String[] WIKIS_HAS_FIXED_CONTENT;
+    public static final Pattern PATTERN_BORDER_FIXED_CONTENT;
+    public static final String BORDER_FIXED_CONTENT;
+    
     public static final Pattern PATTERN_TITLE;
     public static final Pattern PATTERN_TAGS;
     
@@ -39,19 +46,20 @@ public class Config {
     
     public static final String LATEST_WIKI_LIST_FILE_PATH;
     public static final int MAX_LATEST_MODIFIED_FILE_NUM;
+    
     public static final int COUNT_SPLIT_FOR_LIST;
     public static final String SPLIT_LINE_FOR_LIST;
-    public static final String FIXED_CONTENT_LATEST_FILE;
     
     public static final String TAGS_LIST_FILE_PATH;
-    public static final String FIXED_CONTENT_TAGS_LIST_FILE;
     public static final String PATH_TAG_WIKI_LIST;
+    public static final String DATE_FORMAT_WIKI;
     
     static {
         init();
         
-        COMMAN_CLEAR = get("comman_clear", "/work/wiki/scan/comman.sh clear");
-        COMMAN_COMMIT = get("comman_commit", "/work/wiki/scan/comman.sh commit");
+        ENCODING_SHELL = get("encoding_shell", "UTF-8");
+        COMMAN_CLEAR = get("comman_clear", "/work/wiki/scanProccess/wikiscan_clear.sh /work/wiki Home.md _Sidebar.md tags");
+        COMMAN_COMMIT = get("comman_commit", "/work/wiki/scanProccess/wikiscan_commit.sh /work/wiki");
         
         ENCODING_WIKI_FILE = get("encoding_wiki_file", "UTF-8");
         
@@ -59,22 +67,27 @@ public class Config {
         SUFFIX_WIKI_FILE = get("suffix_wiki_file", ".md");
         
         REGEX_SPLIT_ARRAY = get("regex_split_array", ",");
-        EXCLUDE_DIRS = get("exclude_dirs", new String[] { ".git", "uploads", "pic", "scanProccess" });
-        EXCLUDE_FILES = get("exclude_files", new String[] { "custom.css", "Home.md", "_Sidebar.md", "_Footer.md", "restart.sh", "stop.sh" });
+        EXCLUDE_DIRS = get("exclude_dirs", new String[] { ".git", "uploads", "scanProccess", "tags" });
+        EXCLUDE_FILES = get("exclude_files", new String[] { "custom.css", "Home.md", "_Sidebar.md", "_Footer.md", "restart.sh", "stop.sh", "gollum.log" });
         
-        PATTERN_TITLE = Pattern.compile(get("pattern_title", "^\\s*+<!--\\s++---\\s*+title\\s*+:\\s*+(.*?)\\s*-->\\s*+$"));
-        PATTERN_TAGS = Pattern.compile(get("pattern_tags", "^\\s*+<!--\\s++---\\s*+tags\\s*+:\\s*+(.*?)\\s*-->\\s*+$"));
+        WIKIS_HAS_FIXED_CONTENT = get("wikis_has_fixed_content", new String[] { "Home.md", "_Sidebar.md" });
+        PATTERN_BORDER_FIXED_CONTENT = Pattern.compile(get("pattern_border_fixed_content", "^\\s*+<!--++\\s++---++\\s*+fixed\\s++content\\s++boder\\s*+--++>\\s*+$"));
+        BORDER_FIXED_CONTENT = get("border_fixed_content", "<!-- --- fixed content boder -->");
+        
+        PATTERN_TITLE = Pattern.compile(get("pattern_title", "^\\s*+<!--++\\s++---++\\s*+title\\s*+:\\s*+(.*?)\\s*--++>\\s*+$"));
+        PATTERN_TAGS = Pattern.compile(get("pattern_tags", "^\\s*+<!--++\\s++---++\\s*+tags\\s*+:\\s*+(.*?)\\s*--++>\\s*+$"));
         
         REGEX_SPLIT_TAGS = get("regex_split_tags", "\\s+");
         
+        DATE_FORMAT_WIKI = get("date_format_wiki", "yyyy-MM-dd HH:mm:ss");
+        
         LATEST_WIKI_LIST_FILE_PATH = get("latest_wiki_list_file_path", "Home.md");
         MAX_LATEST_MODIFIED_FILE_NUM = get("max_latest_modified_file_num", 50);
+        
         COUNT_SPLIT_FOR_LIST = get("count_split_for_list", 10);
         SPLIT_LINE_FOR_LIST = get("split_line_for_list", "***");
-        FIXED_CONTENT_LATEST_FILE = get("fixed_content_latest_file", "");
         
         TAGS_LIST_FILE_PATH = get("tags_list_file_path", "_Sidebar.md");
-        FIXED_CONTENT_TAGS_LIST_FILE = get("fixed_content_tags_list_file", "");
         PATH_TAG_WIKI_LIST = get("path_tag_wiki_list", "/tags/");
     }
     
@@ -100,8 +113,6 @@ public class Config {
         }
         return array;
     }
-    
-    private static final Map<String, String> confMap = new HashMap<String, String>();
     
     private static void init() {
         File file = new File(FileUtils.mergePath(System.getProperty("user.dir"), CONFIG_FILE_PATH));

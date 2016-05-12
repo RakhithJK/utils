@@ -11,16 +11,20 @@ import java.util.regex.Matcher;
 
 import com.chencye.wikiScan.bean.Wiki;
 import com.chencye.wikiScan.config.Config;
+import com.chencye.wikiScan.log.Log;
+import com.chencye.wikiScan.log.LogFactory;
+import com.chencye.wikiScan.utils.DateUtils;
 import com.chencye.wikiScan.utils.FileUtils;
 import com.chencye.wikiScan.utils.IOUtils;
 
 public class WikiUtils {
+    public static Log log = LogFactory.getLog(WikiUtils.class);
     
     public static List<Wiki> read(List<File> files) {
         List<Wiki> wikis = new ArrayList<Wiki>();
         for (File file : files) {
             String url = generateWikiUrl(file);
-            Wiki wiki = new Wiki(url, file.lastModified());
+            Wiki wiki = new Wiki(url, DateUtils.format(file.lastModified(), Config.DATE_FORMAT_WIKI));
             BufferedReader br = null;
             try {
                 br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Config.ENCODING_WIKI_FILE));
@@ -54,7 +58,11 @@ public class WikiUtils {
     
     private static String generateWikiUrl(File file) {
         String absolutePath = file.getAbsolutePath();
-        String url = absolutePath.substring(absolutePath.indexOf(Config.PATH_WIKI), absolutePath.indexOf(Config.SUFFIX_WIKI_FILE));
+        log.info("absolutePath={}, wikiPath={}, suffix={}", absolutePath, Config.PATH_WIKI, Config.SUFFIX_WIKI_FILE);
+        String url = absolutePath.substring(Config.PATH_WIKI.length());
+        if (url.endsWith(Config.SUFFIX_WIKI_FILE)) {
+            url = url.substring(0, url.indexOf(Config.SUFFIX_WIKI_FILE));
+        }
         url = FileUtils.mergePath(File.separator, url);
         return url;
     }

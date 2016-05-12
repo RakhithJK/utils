@@ -1,4 +1,5 @@
-<assembly>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
     <id>bin</id>
     <!-- 最终打包成一个用于发布的zip文件 -->
     <formats>
@@ -36,7 +37,7 @@
                 <include>*.properties</include>
             </includes>
         </fileSet>
-        
+
         <!-- 把项目的配置文件，打包进zip文件的resources目录 -->
         <fileSet>
             <directory>${project.basedir}\conf</directory>
@@ -56,14 +57,8 @@
             </includes>
         </fileSet>
 
-        <!-- 把项目的脚本文件（除了启动脚本文件），打包进zip文件的script目录
-        <fileSet>
-            <directory>${project.build.scriptSourceDirectory}</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <exclude>startup.*</exclude>
-            </includes>
-        </fileSet> -->
+        <!-- 把项目的脚本文件（除了启动脚本文件），打包进zip文件的script目录 <fileSet> <directory>${project.build.scriptSourceDirectory}</directory> <outputDirectory></outputDirectory> 
+            <includes> <exclude>startup.*</exclude> </includes> </fileSet> -->
 
         <!-- 把项目自己编译出来的jar文件，打包进zip文件的根目录 -->
         <fileSet>
