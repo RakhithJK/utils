@@ -6,8 +6,8 @@ wiki_root=$1
 
 if [ ! -d $wiki_root ];
 then
-	echo -e "  --->  缺少参数: wiki根路径\n"
-	exit 1
+    echo -e "  --->  缺少参数: wiki根路径\n"
+    exit 1
 fi
 
 cd $wiki_root
