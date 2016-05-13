@@ -117,10 +117,10 @@ public class WikiScan {
                     for (String line : fixedContents) {
                         bw.write(line);
                         bw.newLine();
-                        bw.newLine();
                         bw.flush();
                         log.info("向文件{}输入固定内容：{}", path, line);
                     }
+                    bw.newLine();
                     log.newLine();
                 }
             } catch (IOException e) {

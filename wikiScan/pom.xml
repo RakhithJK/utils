@@ -12,6 +12,7 @@
         </dependency>
     </dependencies>
 
+    <!-- clean compile package -->
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
